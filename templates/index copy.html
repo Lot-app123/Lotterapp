@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>สุ่มเลขหวย</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function updateDateTime() {
+            const now = new Date();
+            const options = { timeZone: "Asia/Bangkok", hour12: false };
+            document.getElementById("datetime").innerText = now.toLocaleString("th-TH", options);
+        }
+        setInterval(updateDateTime, 1000);
+        
+        function toggleSelectAll(selectAllCheckbox) {
+            var checkboxes = document.querySelectorAll('input[type="checkbox"][name="lottery_type"]');
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        }
+    </script>
+        
+</head>
+<body onload="updateDateTime()">
+    <header>
+        <span id="username"></span>
+        <span id="datetime"></span>
+        <a href="{{ url_for('logout') }}" class="logout-btn">ออกจากระบบ</a>
+    </header>
+    <div class="container">
+        <h2>เลือกประเภทหวย</h2>
+        <form method="POST">
+            <div class="lottery-set">
+                <h3>Set 1</h3>
+                <input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)">
+                <label for="selectAll">Select all</label><br>
+
+                <input type="checkbox" id="ลาวEXTRA" name="lottery_type" value="ลาวEXTRA">
+                <label for="ลาวEXTRA">ลาวEXTRA</label><br>
+            
+                <input type="checkbox" id="นิเคอิเช้าVIP" name="lottery_type" value="นิเคอิเช้าVIP">
+                <label for="นิเคอิเช้าVIP">นิเคอิเช้าVIP</label><br>
+            
+                <input type="checkbox" id="ฮานอยอาเซียน" name="lottery_type" value="ฮานอยอาเซียน">
+                <label for="ฮานอยอาเซียน">ฮานอยอาเซียน</label><br>
+            
+                <input type="checkbox" id="นิเคอิเช้า" name="lottery_type" value="นิเคอิเช้า">
+                <label for="นิเคอิเช้า">นิเคอิเช้า</label><br>
+            
+                <input type="checkbox" id="จีนเช้าVIP" name="lottery_type" value="จีนเช้าVIP">
+                <label for="จีนเช้าVIP">จีนเช้าVIP</label><br>
+            
+                <input type="checkbox" id="จีนเช้า" name="lottery_type" value="จีนเช้า">
+                <label for="จีนเช้า">จีนเช้า</label><br>
+            
+                <input type="checkbox" id="ลาวTV" name="lottery_type" value="ลาวTV">
+                <label for="ลาวTV">ลาวTV</label><br>
+            
+                <input type="checkbox" id="ฮั่งเส็งเช้าVIP" name="lottery_type" value="ฮั่งเส็งเช้าVIP">
+                <label for="ฮั่งเส็งเช้าVIP">ฮั่งเส็งเช้าVIP</label><br>
+            
+                <input type="checkbox" id="ฮั่งเส็งเช้า" name="lottery_type" value="ฮั่งเส็งเช้า">
+                <label for="ฮั่งเส็งเช้า">ฮั่งเส็งเช้า</label><br>
+            
+                <input type="checkbox" id="ฮานอยHD" name="lottery_type" value="ฮานอยHD">
+                <label for="ฮานอยHD">ฮานอยHD</label><br>
+            
+                <input type="checkbox" id="ไต้หวันVIP" name="lottery_type" value="ไต้หวันVIP">
+                <label for="ไต้หวันVIP">ไต้หวันVIP</label><br>
+            
+                <input type="checkbox" id="ลาวพิเศษรอบเที่ยง" name="lottery_type" value="ลาวพิเศษรอบเที่ยง">
+                <label for="ลาวพิเศษรอบเที่ยง">ลาวพิเศษรอบเที่ยง</label><br>
+            
+                <input type="checkbox" id="ไต้หวัน" name="lottery_type" value="ไต้หวัน">
+                <label for="ไต้หวัน">ไต้หวัน</label><br>
+            
+                <input type="checkbox" id="ฮานอยสตาร์" name="lottery_type" value="ฮานอยสตาร์">
+                <label for="ฮานอยสตาร์">ฮานอยสตาร์</label><br>
+            
+                <input type="checkbox" id="เกาหลีVIP" name="lottery_type" value="เกาหลีVIP">
+                <label for="เกาหลีVIP">เกาหลีVIP</label><br>
+            
+                <input type="checkbox" id="เกาหลี" name="lottery_type" value="เกาหลี">
+                <label for="เกาหลี">เกาหลี</label><br>
+            
+                <input type="checkbox" id="นิเคอิบ่าย" name="lottery_type" value="นิเคอิบ่าย">
+                <label for="นิเคอิบ่าย">นิเคอิบ่าย</label><br>
+            
+                <input type="checkbox" id="นิเคอิบ่ายVIP" name="lottery_type" value="นิเคอิบ่ายVIP">
+                <label for="นิเคอิบ่ายVIP">นิเคอิบ่ายVIP</label><br>
+            
+                <input type="checkbox" id="ลาวHD" name="lottery_type" value="ลาวHD">
+                <label for="ลาวHD">ลาวHD</label><br>
+            
+                <input type="checkbox" id="จีนบ่าย" name="lottery_type" value="จีนบ่าย">
+                <label for="จีนบ่าย">จีนบ่าย</label><br>
+            
+                <input type="checkbox" id="ฮานอยTV" name="lottery_type" value="ฮานอยTV">
+                <label for="ฮานอยTV">ฮานอยTV</label><br>
+            
+                <input type="checkbox" id="จีนบ่ายVIP" name="lottery_type" value="จีนบ่ายVIP">
+                <label for="จีนบ่ายVIP">จีนบ่ายVIP</label><br>
+            
+                <input type="checkbox" id="ฮั่งเส็งบ่าย" name="lottery_type" value="ฮั่งเส็งบ่าย">
+                <label for="ฮั่งเส็งบ่าย">ฮั่งเส็งบ่าย</label><br>
+            
+                <input type="checkbox" id="ฮั่งเส็งบ่ายVIP" name="lottery_type" value="ฮั่งเส็งบ่ายVIP">
+                <label for="ฮั่งเส็งบ่ายVIP">ฮั่งเส็งบ่ายVIP</label><br>
+            
+                <input type="checkbox" id="ลาวสตาร์" name="lottery_type" value="ลาวสตาร์">
+                <label for="ลาวสตาร์">ลาวสตาร์</label><br>
+            
+                <input type="checkbox" id="ไทยเย็น" name="lottery_type" value="ไทยเย็น">
+                <label for="ไทยเย็น">ไทยเย็น</label><br>
+            
+                <input type="checkbox" id="สิงคโปร์" name="lottery_type" value="สิงคโปร์">
+                <label for="สิงคโปร์">สิงคโปร์</label><br>
+            
+                <input type="checkbox" id="ฮานอยกาชาด" name="lottery_type" value="ฮานอยกาชาด">
+                <label for="ฮานอยกาชาด">ฮานอยกาชาด</label><br>
+            
+                <input type="checkbox" id="สิงคโปร์VIP" name="lottery_type" value="สิงคโปร์VIP">
+                <label for="สิงคโปร์VIP">สิงคโปร์VIP</label><br>
+            
+                <input type="checkbox" id="ฮานอยพิเศษ" name="lottery_type" value="ฮานอยพิเศษ">
+                <label for="ฮานอยพิเศษ">ฮานอยพิเศษ</label><br>
+            
+                <input type="checkbox" id="ฮานอยสามัคคี" name="lottery_type" value="ฮานอยสามัคคี">
+                <label for="ฮานอยสามัคคี">ฮานอยสามัคคี</label><br>
+            
+                <input type="checkbox" id="อินเดีย" name="lottery_type" value="อินเดีย">
+                <label for="อินเดีย">อินเดีย</label><br>
+            
+                <input type="checkbox" id="ฮานอยปกติ" name="lottery_type" value="ฮานอยปกติ">
+                <label for="ฮานอยปกติ">ฮานอยปกติ</label><br>
+            
+                <input type="checkbox" id="มาเลย์" name="lottery_type" value="มาเลย์">
+                <label for="มาเลย์">มาเลย์</label><br>
+            
+                <input type="checkbox" id="อียิปต์" name="lottery_type" value="อียิปต์">
+                <label for="อียิปต์">อียิปต์</label><br>
+            
+                <input type="checkbox" id="ฮานอยVIP" name="lottery_type" value="ฮานอยVIP">
+                <label for="ฮานอยVIP">ฮานอยVIP</label><br>
+            
+                <input type="checkbox" id="ฮานอยพัฒนา" name="lottery_type" value="ฮานอยพัฒนา">
+                <label for="ฮานอยพัฒนา">ฮานอยพัฒนา</label><br>
+            
+                <input type="checkbox" id="ลาวสามัคคี" name="lottery_type" value="ลาวสามัคคี">
+                <label for="ลาวสามัคคี">ลาวสามัคคี</label><br>
+            
+                <input type="checkbox" id="ลาวพัฒนา" name="lottery_type" value="ลาวพัฒนา">
+                <label for="ลาวพัฒนา">ลาวพัฒนา</label><br>
+            
+                <input type="checkbox" id="ลาวอาเซียน" name="lottery_type" value="ลาวอาเซียน">
+                <label for="ลาวอาเซียน">ลาวอาเซียน</label><br>
+            
+                <input type="checkbox" id="ลาวVIP" name="lottery_type" value="ลาวVIP">
+                <label for="ลาวVIP">ลาวVIP</label><br>
+            
+                <input type="checkbox" id="ลาวสามัคคีVIP" name="lottery_type" value="ลาวสามัคคีVIP">
+                <label for="ลาวสามัคคีVIP">ลาวสามัคคีVIP</label><br>
+            
+                <input type="checkbox" id="ลาวSTARVIP" name="lottery_type" value="ลาวSTARVIP">
+                <label for="ลาวSTARVIP">ลาวSTARVIP</label><br>
+            
+                <input type="checkbox" id="อังกฤษVIP" name="lottery_type" value="อังกฤษVIP">
+                <label for="อังกฤษVIP">อังกฤษVIP</label><br>
+            
+                <input type="checkbox" id="ฮานอยEXTRA" name="lottery_type" value="ฮานอยEXTRA">
+                <label for="ฮานอยEXTRA">ฮานอยEXTRA</label><br>
+            
+                <input type="checkbox" id="รัสเซีย" name="lottery_type" value="รัสเซีย">
+                <label for="รัสเซีย">รัสเซีย</label><br>
+            
+                <input type="checkbox" id="เยอรมันVIP" name="lottery_type" value="เยอรมันVIP">
+                <label for="เยอรมันVIP">เยอรมันVIP</label><br>
+            
+                <input type="checkbox" id="อังกฤษ" name="lottery_type" value="อังกฤษ">
+                <label for="อังกฤษ">อังกฤษ</label><br>
+            
+                <input type="checkbox" id="เยอรมัน" name="lottery_type" value="เยอรมัน">
+                <label for="เยอรมัน">เยอรมัน</label><br>
+            
+                <input type="checkbox" id="ลาวกาชาด" name="lottery_type" value="ลาวกาชาด">
+                <label for="ลาวกาชาด">ลาวกาชาด</label><br>
+            
+                <input type="checkbox" id="ยูโร" name="lottery_type" value="ยูโร">
+                <label for="ยูโร">ยูโร</label><br>
+            
+                <input type="checkbox" id="รัสเซียVIP" name="lottery_type" value="รัสเซียVIP">
+                <label for="รัสเซียVIP">รัสเซียVIP</label><br>
+            
+                <input type="checkbox" id="ดาวโจนส์VIP" name="lottery_type" value="ดาวโจนส์VIP">
+                <label for="ดาวโจนส์VIP">ดาวโจนส์VIP</label><br>
+            </div>
+            <div class="lottery-set">
+                <h3>Set 2</h3>
+                
+                    <input type="checkbox" id="ธกส" name="lottery_type" value="ธกส">
+                    <label for="ธกส">ธกส</label><br>
+                
+                    <input type="checkbox" id="ออมสิน" name="lottery_type" value="ออมสิน">
+                    <label for="ออมสิน">ออมสิน</label><br>
+                
+                    <input type="checkbox" id="ไทย" name="lottery_type" value="ไทย">
+                    <label for="ไทย">ไทย</label><br>
+                
+                    <input type="checkbox" id="รัฐบาลไทย" name="lottery_type" value="รัฐบาลไทย">
+                    <label for="รัฐบาลไทย">รัฐบาลไทย</label><br>
+                </div>
+                <div class="lottery-set">
+                    <h3>เสาร์-อาทิตย์</h3>  
+                
+                    <input type="checkbox" id="หวยดาวโจนส์VIP" name="lottery_type" value="หวยดาวโจนส์VIP">
+                    <label for="หวยดาวโจนส์VIP">หวยดาวโจนส์ VIP</label><br>
+                
+                    <input type="checkbox" id="หวยดาวโจนส์STAR" name="lottery_type" value="หวยดาวโจนส์STAR">
+                    <label for="หวยดาวโจนส์STAR">หวยดาวโจนส์ STAR</label><br>
+                
+                    <input type="checkbox" id="หวยลาวExtra" name="lottery_type" value="หวยลาว Extra">
+                    <label for="หวยลาวExtra">หวยลาว Extra</label><br>
+                
+                    <input type="checkbox" id="นิเคอิเช้าVIP" name="lottery_type" value="นิเคอิ(เช้า)VIP">
+                    <label for="นิเคอิเช้าVIP">นิเคอิ(เช้า)VIP</label><br>
+                
+                    <input type="checkbox" id="ฮานอยอาเซียน" name="lottery_type" value="ฮานอยอาเซียน">
+                    <label for="ฮานอยอาเซียน">ฮานอยอาเซียน</label><br>
+                
+                    <input type="checkbox" id="จีนเช้าVIP" name="lottery_type" value="จีน(เช้า)VIP">
+                    <label for="จีนเช้าVIP">จีน(เช้า)VIP</label><br>
+                
+                    <input type="checkbox" id="หวยลาวTV" name="lottery_type" value="หวยลาวTV">
+                    <label for="หวยลาวTV">หวยลาวTV</label><br>
+                
+                    <input type="checkbox" id="ฮั่งเส็งเช้าVIP" name="lottery_type" value="ฮั่งเส็ง(เช้า)VIP">
+                    <label for="ฮั่งเส็งเช้าVIP">ฮั่งเส็ง(เช้า)VIP</label><br>
+                
+                    <input type="checkbox" id="ฮานอยHD" name="lottery_type" value="ฮานอยHD">
+                    <label for="ฮานอยHD">ฮานอยHD</label><br>
+                
+                    <input type="checkbox" id="ไต้หวันVIP" name="lottery_type" value="ไต้หวันVIP">
+                    <label for="ไต้หวันVIP">ไต้หวันVIP</label><br>
+                
+                    <input type="checkbox" id="ฮานอยสตาร์" name="lottery_type" value="ฮานอยสตาร์">
+                    <label for="ฮานอยสตาร์">ฮานอยสตาร์</label><br>
+                
+                    <input type="checkbox" id="เกาหลีVIP" name="lottery_type" value="เกาหลีVIP">
+                    <label for="เกาหลีVIP">เกาหลีVIP</label><br>
+                
+                    <input type="checkbox" id="นิเคอิบ่ายVIP" name="lottery_type" value="นิเคอิ(บ่าย)VIP">
+                    <label for="นิเคอิบ่ายVIP">นิเคอิ(บ่าย)VIP</label><br>
+                
+                    <input type="checkbox" id="หวยลาวHD" name="lottery_type" value="หวยลาวHD">
+                    <label for="หวยลาวHD">หวยลาวHD</label><br>
+                
+                    <input type="checkbox" id="หวยฮานอยTV" name="lottery_type" value="หวยฮานอยTV">
+                    <label for="หวยฮานอยTV">หวยฮานอยTV</label><br>
+                
+                    <input type="checkbox" id="จีนบ่ายVIP" name="lottery_type" value="จีน(บ่าย)VIP">
+                    <label for="จีนบ่ายVIP">จีน(บ่าย)VIP</label><br>
+                
+                    <input type="checkbox" id="ฮั่งเส็งบ่ายVIP" name="lottery_type" value="ฮั่งเส็ง(บ่าย)VIP">
+                    <label for="ฮั่งเส็งบ่ายVIP">ฮั่งเส็ง(บ่าย)VIP</label><br>
+                
+                    <input type="checkbox" id="หวยลาวสตาร์" name="lottery_type" value="หวยลาวสตาร์">
+                    <label for="หวยลาวสตาร์">หวยลาวสตาร์</label><br>
+                
+                    <input type="checkbox" id="หวยฮานอยกาชาด" name="lottery_type" value="หวยฮานอยกาชาด">
+                    <label for="หวยฮานอยกาชาด">หวยฮานอยกาชาด</label><br>
+                
+                    <input type="checkbox" id="สิงคโปร์VIP" name="lottery_type" value="สิงคโปร์VIP">
+                    <label for="สิงคโปร์VIP">สิงคโปร์VIP</label><br>
+                
+                    <input type="checkbox" id="ฮานอยสามัคคี" name="lottery_type" value="ฮานอยสามัคคี">
+                    <label for="ฮานอยสามัคคี">ฮานอยสามัคคี</label><br>
+                
+                    <input type="checkbox" id="ฮานอยพิเศษ" name="lottery_type" value="ฮานอยพิเศษ">
+                    <label for="ฮานอยพิเศษ">ฮานอยพิเศษ</label><br>
+                
+                    <input type="checkbox" id="หวยมาเลย์" name="lottery_type" value="หวยมาเลย์">
+                    <label for="หวยมาเลย์">หวยมาเลย์</label><br>
+                
+                    <input type="checkbox" id="หวยฮานอย" name="lottery_type" value="หวยฮานอย">
+                    <label for="หวยฮานอย">หวยฮานอย</label><br>
+                
+                    <input type="checkbox" id="ฮานอยพัฒนา" name="lottery_type" value="ฮานอยพัฒนา">
+                    <label for="ฮานอยพัฒนา">ฮานอยพัฒนา</label><br>
+                
+                    <input type="checkbox" id="หวยฮานอยVIP" name="lottery_type" value="หวยฮานอยVIP">
+                    <label for="หวยฮานอยVIP">หวยฮานอยVIP</label><br>
+                
+                    <input type="checkbox" id="หวยลาวสามัคคี" name="lottery_type" value="หวยลาวสามัคคี">
+                    <label for="หวยลาวสามัคคี">หวยลาวสามัคคี</label><br>
+                
+                    <input type="checkbox" id="ลาวอาเซียน" name="lottery_type" value="ลาวอาเซียน">
+                    <label for="ลาวอาเซียน">ลาวอาเซียน</label><br>
+                
+                    <input type="checkbox" id="หวยลาวVIP" name="lottery_type" value="หวยลาวVIP">
+                    <label for="หวยลาวVIP">หวยลาวVIP</label><br>
+                
+                    <input type="checkbox" id="หวยลาวสามัคคีVIP" name="lottery_type" value="หวยลาวสามัคคีVIP">
+                    <label for="หวยลาวสามัคคีVIP">หวยลาวสามัคคีVIP</label><br>
+                
+                    <input type="checkbox" id="หวยลาวSTARVIP" name="lottery_type" value="หวยลาวSTARVIP">
+                    <label for="หวยลาวSTARVIP">หวยลาวSTARVIP</label><br>
+                
+                    <input type="checkbox" id="อังกฤษVIP" name="lottery_type" value="อังกฤษVIP">
+                    <label for="อังกฤษVIP">อังกฤษVIP</label><br>
+                
+                    <input type="checkbox" id="หวยฮานอยExtra" name="lottery_type" value="หวยฮานอยExtra">
+                    <label for="หวยฮานอยExtra">หวยฮานอยExtra</label><br>
+                
+                    <input type="checkbox" id="ฮานอยดึก" name="lottery_type" value="ฮานอยดึก">
+                    <label for="ฮานอยดึก">ฮานอยดึก</label><br>
+                
+                    <input type="checkbox" id="เยอรมันVIP" name="lottery_type" value="เยอรมันVIP">
+                    <label for="เยอรมันVIP">เยอรมันVIP</label><br>
+                
+                    <input type="checkbox" id="ยูโร" name="lottery_type" value="ยูโร">
+                    <label for="ยูโร">ยูโร</label><br>
+                
+                    <input type="checkbox" id="หวยลาวกาขาด" name="lottery_type" value="หวยลาวกาขาด">
+                    <label for="หวยลาวกาขาด">หวยลาวกาขาด</label><br>
+                
+                    <input type="checkbox" id="รัสเซียVIP" name="lottery_type" value="รัสเซียVIP">
+                    <label for="รัสเซียVIP">รัสเซียVIP</label><br>
+                </div>
+                
+            <button type="submit">สร้างรูปภาพ</button>
+        </form>
+        
+    </div>
+</body>
+</html>
