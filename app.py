@@ -1,76 +1,157 @@
-
-from flask import Flask, render_template, request, send_file
-from flask_login import login_required
-from io import BytesIO
-import os
+from flask import Flask, render_template, request, send_file, redirect, url_for, session
+from flask_login import LoginManager, login_user, login_required, logout_user, UserMixin, current_user 
+from datetime import datetime
 import random
+import os
 from PIL import Image, ImageDraw, ImageFont
-import zipfile
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
+# if __name__ == "__main__":
+#     app.run(host="0.0.0.0", port=5000, debug=True)
+
+# ตั้งค่า Login Manager
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"  # ถ้ายังไม่ได้ล็อกอินให้ redirect ไปที่หน้า login
+
+# จำลอง user
+class User(UserMixin):
+    def __init__(self, id):
+        self.id = id
+
+# ผู้ใช้ตัวอย่าง (ควรใช้ Database จริง)
+users = {"admin": {"password": "1234"}}
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User(user_id)
+
+# 🔹 หน้า Login
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+
+        if username in users and users[username]["password"] == password:
+            user = User(username)
+            login_user(user)
+            return redirect(url_for("lottery"))  # หลังล็อกอินสำเร็จไปที่หน้าสุ่มหวย
+        
+    return render_template("login.html")
+
+# 🔹 หน้า Logout
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("login"))
+
+# 🔹 หน้าสุ่มหวย (ต้องล็อกอินก่อน)
+#@app.route("/", methods=["GET", "POST"])
+#@login_required
+#def lottery():
+#    if request.method == "POST":
+#        lottery_type = request.form["lottery_type"]
+#       img_path = create_image(lottery_type)
+#       return send_file(img_path, mimetype="image/png", as_attachment=True, download_name="lottery_result.png")
+#    return render_template("index.html")
+import zipfile  # เพิ่มการนำเข้า zipfile
 
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def lottery():
     if request.method == "POST":
-        lottery_types = request.form.getlist("lottery_type")
-        bg_choice = request.form.get("bg_choice")
-        images = []
+        lottery_types = request.form.getlist("lottery_type")  # รับค่าหลายค่าจากตัวเลือกที่เลือก
+        img_paths = []
 
+        # สร้างภาพสำหรับแต่ละประเภทหวยที่เลือก
         for lottery_type in lottery_types:
-            img_bytes = create_image(lottery_type, bg_choice)
-            images.append((lottery_type, img_bytes))
+            img_path = create_image(lottery_type)
+            img_paths.append((lottery_type, img_path))  # เก็บประเภทหวยและ path ของไฟล์ภาพ
 
-        if len(images) == 1:
-            return send_file(images[0][1], mimetype="image/png", as_attachment=True, download_name=f"{images[0][0]}.png")
+        # ถ้าต้องการให้ดาวน์โหลดทีละไฟล์
+        if len(img_paths) == 1:
+            return send_file(img_paths[0][1], mimetype="image/png", as_attachment=True, download_name="lottery_result.png")
 
-        zip_buffer = BytesIO()
-        with zipfile.ZipFile(zip_buffer, "w") as zipf:
-            for lottery_type, img_bytes in images:
-                zipf.writestr(f"{lottery_type}.png", img_bytes.read())
-                img_bytes.seek(0)
-        zip_buffer.seek(0)
-        return send_file(zip_buffer, mimetype="application/zip", as_attachment=True, download_name="lottery_results.zip")
+        # หรือ ถ้าต้องการให้รวมหลายไฟล์ไว้ในไฟล์ zip
+        zip_filename = "lottery_results.zip"
+        with zipfile.ZipFile(zip_filename, 'w') as zipf:
+            for lottery_type, img_path in img_paths:
+                # ตั้งชื่อไฟล์ใน zip ให้แตกต่างกัน เช่น ใช้ชื่อประเภทหวย
+                zipf.write(img_path, os.path.basename(f"{lottery_type}.png"))
+
+        return send_file(zip_filename, mimetype="application/zip", as_attachment=True, download_name=zip_filename)
 
     return render_template("index copy.html")
 
-def create_image(lottery_type, bg_choice):
-    bg_path = os.path.join("static", bg_choice)
+# 🔹 ฟังก์ชันสร้างรูปภาพ (เหมือนเดิม)
+def create_image(lottery_type):
+    bg_path = os.path.join("static", "Baan3.jpg")
     font_path = os.path.join("static", "Mali-Bold.ttf")
 
-    image = Image.open(bg_path).convert("RGB")
-    image = image.resize((1280, 720))
-
+    image = Image.open(bg_path)
     draw = ImageDraw.Draw(image)
-    font_large = ImageFont.truetype(font_path, 100)
-    font_medium = ImageFont.truetype(font_path, 70)
-    font_small = ImageFont.truetype(font_path, 40)
+
+    font_large = ImageFont.truetype(font_path, 110)
+    font_medium = ImageFont.truetype(font_path, 80)
+    font_small = ImageFont.truetype(font_path, 53)
+
+    #date_text = datetime.now().strftime("%d.%m.%y")
+    #draw.text((250, 50), date_text, font=font_medium, fill="yellow")
 
     bbox = draw.textbbox((0, 0), lottery_type, font=font_medium)
-    text_width = bbox[2] - bbox[0]
-    x_position = (image.width - text_width) // 2
-    draw.text((x_position, 50), lottery_type, font=font_medium, fill="white")
+    text_width, text_height = bbox[2] - bbox[0], bbox[3] - bbox[1]
+
+    # คำนวณตำแหน่งให้อยู่ตรงกลาง
+    image_width = image.width 
+    x_position = (image_width - text_width) // 2 # ตำแหน่ง X ให้อยู่ตรงกลาง
+    y_position = 160  # ให้ข้อความอยู่ด้านบน
+
+    # วาดข้อความที่คำนวณแล้ว
+    draw.text((x_position, y_position), lottery_type, font=font_medium, fill="white")
+
+    #draw.text((250,50), lottery_type, font=font_medium, fill="white")
 
     num1, num2 = random.sample(range(0, 10), 2)
-    base_tens = random.sample([f"{num1}{i}" for i in range(10)], 10)
-    base_units = random.sample([f"{num2}{i}" for i in range(10)], 10)
 
-    tens1, tens2, tens3 = base_tens[:4], base_tens[4:7], base_tens[7:]
-    units1, units2, units3 = base_units[:4], base_units[4:7], base_units[7:]
+    # 🔥 ห้ามให้มี 23 หรือ 32 (ตามตัวอย่าง)
+    disallowed = {f"{num1}{num2}", f"{num2}{num1}"}
+
+    # 🔹 สร้างรายการเลขสองหลักที่ขึ้นต้นด้วย num1 และไม่ใช่ disallowed
+    all_tens = [f"{num1}{i}" for i in range(10) if f"{num1}{i}" not in disallowed]
+    all_units = [f"{num2}{i}" for i in range(10) if f"{num2}{i}" not in disallowed]
+
+    # 🔹 สุ่มไม่ซ้ำกัน
+    tens = random.sample(all_tens, 1)
+    tens2 = random.sample([x for x in all_tens if x not in tens], 1)
+    tens3 = random.sample([x for x in all_tens if x not in tens + tens2], 1)
+
+    units = random.sample(all_units, 1)
+    units2 = random.sample([x for x in all_units if x not in units], 1)
+    units3 = random.sample([x for x in all_units if x not in units + units2], 1)
 
     random_6_digits = "".join(random.choices(f"{num1}{num2}" + "0123456789", k=6))
 
-    draw.text((350, 250), f"{num1} - {num2}", font=font_large, fill="yellow")
-    draw.text((250, 350), " ".join(tens1), font=font_small, fill="yellow")
-    draw.text((250, 400), " ".join(units1), font=font_small, fill="yellow")
-    draw.text((300, 500), f"วิน.{random_6_digits}", font=font_medium, fill="yellow")
+    draw.text((160, 490), f"{num1} - {num2}", font=font_large, fill="white")
+    draw.text((560, 385), " ".join(tens[:1]), font=font_large, fill="white")
+    draw.text((560, 510), " ".join(tens2[:1]), font=font_large, fill="white")
+    draw.text((560, 635), " ".join(tens3[:1]), font=font_large, fill="white")
+    draw.text((770, 385), " ".join(units[:1]), font=font_large, fill="white")
+    draw.text((770, 510), " ".join(units2[:1]), font=font_large, fill="white")
+    draw.text((770, 635), " ".join(units3[:1]), font=font_large, fill="white")
+    #draw.text((250, 520), f"วิน.{random_6_digits}", font=font_medium, fill="yellow")
 
-    output_io = BytesIO()
-    image.save(output_io, format="PNG", optimize=True)
-    output_io.seek(0)
+    output_filename = f"output_{lottery_type}.jpg"
+    output_path = os.path.join("static", output_filename)
 
-    return output_io
+    image.save(output_path)
+    return output_path
 
+#if __name__ == "__main__":Edit By Frank 
+ #   app.run(debug=True)
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    import os
+    port = int(os.environ.get("PORT", 5001))
+    app.run(host="0.0.0.0", port=port)
